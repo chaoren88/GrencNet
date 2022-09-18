@@ -1,7 +1,7 @@
 import glob, cv2, os
 import numpy as np
 from skimage import io, img_as_ubyte
-from tcsvt.GrancNet import DN
+from GrancNet import DN
 import torch
 from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
@@ -19,8 +19,9 @@ save_denoised_image = False
 
 psnr = 0
 ssim = 0
+img_nums = len(image_list)
 
-for i in range(len(image_list)):
+for i in range(img_nums):
     image_name = image_list[i]
     print('Image: {:02d}, path: {:s}'.format(i+1, image_name))
     path_label = os.path.split(image_name)
@@ -31,9 +32,9 @@ for i in range(len(image_list)):
     noisy_img = torch.from_numpy(im_input).to(device)
     noisy_img = noisy_img.unsqueeze(0)
     with torch.no_grad():
-        aa, test_out = model(noisy_img)
+        noise_map, test_out = model(noisy_img)
 
-    im_denoise = test_out.data
+    im_denoise = test_out.data.cpu()
     im_denoise.clamp_(0.0, 1.0)
     im_denoise = img_as_ubyte(im_denoise.squeeze(0).numpy().transpose([1, 2, 0]))
     print(im_denoise)
@@ -47,7 +48,7 @@ for i in range(len(image_list)):
     _, save_name = os.path.split(image_name)
     if save_denoised_image:
         io.imsave(os.path.join('./results', gt_name + '_{:.2f}_{:.4f}.png'.format(psnr_iter,ssim_iter)), im_denoise)
-    exit(1)
+    
 
 print("///////////////////////////////////////")
-print('PSNR: {:.2f}, SSIM: {:.4f}'.format(psnr,ssim))
+print('PSNR: {:.2f}, SSIM: {:.4f}'.format(psnr/img_nums,ssim/img_nums))
