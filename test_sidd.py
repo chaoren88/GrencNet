@@ -37,7 +37,6 @@ for i in range(img_nums):
     im_denoise = test_out.data.cpu()
     im_denoise.clamp_(0.0, 1.0)
     im_denoise = img_as_ubyte(im_denoise.squeeze(0).numpy().transpose([1, 2, 0]))
-    print(im_denoise)
 
     gt = io.imread('./dataset/SIDD_clean/' + gt_name + '.png')
     psnr_iter = compare_psnr(im_denoise, gt, data_range=255)
