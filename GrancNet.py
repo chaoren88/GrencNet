@@ -303,13 +303,13 @@ class DN(nn.Module):
         M0 = self.head(noisyImage)
         n0 = self.P(noisyImage)
         M1 = self.F(M0, M0, n0) + M0
-        outs = []
+        noise_map = []
 
         for i in range(4):
             n0 = n0 + self.C(M1, n0)
             M1 = self.F(M1, M0, n0) + M0
-            outs.append(n0)
-        return outs,self.tail(M1)
+            noise_map.append(n0)
+        return noise_map,self.tail(M1)
 
     def initialize_weights(self):
         for m in self.modules():
