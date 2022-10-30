@@ -1,7 +1,7 @@
 import glob, cv2, os
 import numpy as np
 from skimage import io, img_as_ubyte
-from GrancNet import DN
+from GrencNet import DN
 import torch
 from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
