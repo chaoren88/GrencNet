@@ -1,4 +1,4 @@
-# Real Image Denoising via Guided Residual Estimation and Noise Correction (GrancNet)
+# Real Image Denoising via Guided Residual Estimation and Noise Correction (GrencNet)
 
 Our experiments are done with:
 
